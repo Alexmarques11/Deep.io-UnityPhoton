@@ -1,56 +1,63 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
 public class LeaderboardManager : MonoBehaviour
 {
-    public GameObject leaderboardPanel;  // Referência ao painel da leaderboard
-    public GameObject leaderboardEntryPrefab;  // Referência ao prefab do template de texto
-    public Transform leaderboardContainer;  // Contêiner onde os textos serão instanciados
-    private List<PlayerController> players;  // Lista de jogadores
+    public static LeaderboardManager Instance;
 
-    void Start()
-    {
-        players = new List<PlayerController>();
-    }
+    private Dictionary<string, int> playerScores = new Dictionary<string, int>();
+    private TMP_Text leaderboardText;
 
-    // Atualiza a leaderboard com os dados mais recentes
-    public void UpdateLeaderboard()
+    private void Awake()
     {
-        // Limpa qualquer instância anterior da leaderboard
-        foreach (Transform child in leaderboardContainer)
+        if (Instance == null)
         {
-            Destroy(child.gameObject);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
 
-        // Ordena os jogadores pela pontuação (decrescente)
-        players.Sort((player1, player2) => player2.score.CompareTo(player1.score));
-
-        // Cria uma entrada de texto para cada jogador na leaderboard
-        foreach (var player in players)
+        leaderboardText = GameObject.FindGameObjectWithTag("Leaderboard")?.GetComponent<TMP_Text>();
+        if (leaderboardText == null)
         {
-            // Instancia um novo objeto de texto baseado no template
-            GameObject entry = Instantiate(leaderboardEntryPrefab, leaderboardContainer);
-
-            // Obtém o componente TMP_Text do novo objeto
-            TMP_Text text = entry.GetComponent<TMP_Text>();
-
-            // Atualiza o texto com o nome e a pontuação do jogador
-            text.text = $"{player.playerName}: {player.score}";
+            Debug.LogError("LeaderboardText não encontrado na cena.");
         }
     }
 
-    // Função chamada quando um jogador entra na sala
-    public void OnPlayerJoined(PlayerController newPlayer)
+    public void UpdatePlayerScore(string playerName, int score)
     {
-        players.Add(newPlayer);
-        UpdateLeaderboard();  // Atualiza a leaderboard
+        if (playerScores.ContainsKey(playerName))
+        {
+            playerScores[playerName] += score;
+        }
+        else
+        {
+            playerScores[playerName] = score;
+        }
+
+        UpdateLeaderboard();
     }
 
-    // Função chamada quando um jogador sai da sala
-    public void OnPlayerLeft(PlayerController leavingPlayer)
+    private void UpdateLeaderboard()
     {
-        players.Remove(leavingPlayer);
-        UpdateLeaderboard();  // Atualiza a leaderboard
+        var topPlayers = playerScores.OrderByDescending(p => p.Value).Take(6);
+
+        string leaderboardString = "";
+        int rank = 1;
+        foreach (var player in topPlayers)
+        {
+            leaderboardString += $"{rank}. {player.Key}: {player.Value} pontos\n";
+            rank++;
+        }
+
+        if (leaderboardText != null)
+        {
+            leaderboardText.text = leaderboardString;
+        }
     }
 }

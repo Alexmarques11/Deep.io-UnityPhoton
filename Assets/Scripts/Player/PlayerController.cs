@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
             playerColor = randomColor;
 
             view.RPC("UpdatePlayerColor", RpcTarget.AllBuffered, randomColor.r, randomColor.g, randomColor.b);
+
+            UpdateScoresForAllPlayers();
         }
         else
         {
@@ -120,6 +122,22 @@ public class PlayerController : MonoBehaviour
                 scoreText.text = "Score: " + score;
             }
         }
+
+        LeaderboardManager.Instance.UpdatePlayerScore(playerName, points);
+    }
+
+    [PunRPC]
+    public void UpdateScoresForAllPlayers()
+    {
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            // Transmitir o score do jogador para todos os outros jogadores
+            PlayerController playerController = player.TagObject as PlayerController;
+            if (playerController != null)
+            {
+                playerController.view.RPC("UpdateScore", RpcTarget.AllBuffered, playerController.score);
+            }
+        }
     }
 
     void Update()
@@ -153,7 +171,6 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("Taking damage: " + damage);
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 

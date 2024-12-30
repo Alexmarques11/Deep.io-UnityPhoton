@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Implementação de Singleton
         if (Instance == null)
         {
             Instance = this;

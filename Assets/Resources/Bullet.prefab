@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 6425724256581983087}
   - component: {fileID: 3789093698930445668}
   - component: {fileID: 6789234027564483023}
-  - component: {fileID: 919363913922894883}
-  - component: {fileID: 2591307996393356751}
+  - component: {fileID: 8396383018941869753}
+  - component: {fileID: 5417568316019227968}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -176,7 +176,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &919363913922894883
+--- !u!114 &8396383018941869753
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,11 +195,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 2591307996393356751}
+  - {fileID: 5417568316019227968}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2591307996393356751
+--- !u!114 &5417568316019227968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,6 +212,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 0
+  m_SynchronizeAngularVelocity: 0
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3
