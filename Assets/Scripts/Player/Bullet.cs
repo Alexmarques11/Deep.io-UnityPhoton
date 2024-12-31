@@ -34,7 +34,15 @@ public class Bullet : MonoBehaviour
         float rot = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rot);
 
-        Destroy(gameObject, lifetime);
+        Invoke(nameof(DestroyBullet), lifetime);
+    }
+
+    void DestroyBullet()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)

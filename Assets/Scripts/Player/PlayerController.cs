@@ -131,7 +131,6 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var player in PhotonNetwork.PlayerList)
         {
-            // Transmitir o score do jogador para todos os outros jogadores
             PlayerController playerController = player.TagObject as PlayerController;
             if (playerController != null)
             {
@@ -190,7 +189,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Respawn sem delay
     void Respawn()
     {
         Vector2 randomSpawnPosition = new Vector2(
